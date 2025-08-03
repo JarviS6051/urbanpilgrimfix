@@ -325,7 +325,7 @@ const ClassPaymentStatus = () => {
                 </button>
                 {paymentStatus === 'success' && (
                   <button
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate('/my-bookings')}
                     className="px-8 py-4 border-2 border-amber-600 text-amber-600 rounded-xl hover:bg-amber-50 transition-all duration-200 font-semibold text-lg"
                   >
                     View Bookings
@@ -460,7 +460,7 @@ const ClassPaymentStatus = () => {
                 </button>
                 {paymentStatus === 'success' && (
                   <button
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate('/my-bookings')}
                     className="w-full px-6 py-4 border-2 border-amber-600 text-amber-600 rounded-xl hover:bg-amber-50 transition-all duration-200 font-semibold text-lg"
                   >
                     View Bookings

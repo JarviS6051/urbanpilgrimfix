@@ -9,6 +9,7 @@ import {
   UserIcon,
   PhoneIcon
 } from '@heroicons/react/24/outline';
+import { bookingApi } from '../../../api/bookingApi';
 
 const PaymentStatus = () => {
   const [searchParams] = useSearchParams();
@@ -27,8 +28,25 @@ const PaymentStatus = () => {
       setStatus('failed');
       setMessage(errorDescription || 'Payment failed');
     } else if (razorpayPaymentId && razorpaySignature) {
-      setStatus('success');
-      setMessage('Payment completed successfully!');
+      // Call backend to confirm payment
+      bookingApi.handlePaymentCallback({
+        razorpay_order_id: razorpayOrderId,
+        razorpay_payment_id: razorpayPaymentId,
+        razorpay_signature: razorpaySignature,
+      })
+        .then(res => {
+          if (res.success) {
+            setStatus('success');
+            setMessage('Payment completed successfully!');
+          } else {
+            setStatus('failed');
+            setMessage(res.message || 'Payment verification failed');
+          }
+        })
+        .catch(() => {
+          setStatus('failed');
+          setMessage('Payment verification failed');
+        });
     } else {
       setStatus('failed');
       setMessage('Payment verification failed');
@@ -236,7 +254,7 @@ const PaymentStatus = () => {
                 </button>
                 {status === 'success' && (
                   <button
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate('/my-bookings')}
                     className="px-8 py-4 border-2 border-amber-600 text-amber-600 rounded-xl hover:bg-amber-50 transition-all duration-200 font-semibold text-lg"
                   >
                     View Bookings
@@ -343,7 +361,7 @@ const PaymentStatus = () => {
                 </button>
                 {status === 'success' && (
                   <button
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate('/my-bookings')}
                     className="w-full px-6 py-4 border-2 border-amber-600 text-amber-600 rounded-xl hover:bg-amber-50 transition-all duration-200 font-semibold text-lg"
                   >
                     View Bookings

@@ -37,6 +37,10 @@ import PilgrimGuidesCategoryPage from './features/pilgrim-guides/pages/PilgrimGu
 import PilgrimSessionsPage from './features/pilgrim-sessions/pages/PilgrimSessionsPage';
 import BookingReview from './features/pilgrim-experiences/components/BookingReview';
 import PaymentStatus from './features/pilgrim-experiences/components/PaymentStatus';
+import MyBookingsPage from './features/pilgrim-experiences/components/MyBookingsPage';
+import ViewTimeSlots from './features/wellness-guides/pages/ViewTimeSlots';
+import AddRecurringSlots from './features/wellness-guides/pages/AddRecurringSlots';
+import AddSingleSlots from './features/wellness-guides/pages/AddSingleSlots';
 import './App.css';
 
 const App = () => {
@@ -67,6 +71,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/booking/review" element={<BookingReview />} />
           <Route path="/payment/status" element={<PaymentStatus />} />
+          <Route path="/my-bookings" element={<MyBookingsPage />} />
 
           {/* New Routes */}
           <Route path="/pilgrim-retreats" element={<PilgrimRetreatsPage />} />
@@ -74,6 +79,30 @@ const App = () => {
           <Route path="/pilgrim-bazaar" element={<PilgrimBazaarPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/pilgrim-guides/:category" element={<PilgrimGuidesCategoryPage />} />
+          <Route
+            path="/wellness-guide/class/:classId/view-slots"
+            element={
+              <ProtectedRoute requiredRole="wellness_guide">
+                <ViewTimeSlots />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wellness-guide/class/:classId/add-recurring-slots"
+            element={
+              <ProtectedRoute requiredRole="wellness_guide">
+                <AddRecurringSlots />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wellness-guide/class/:classId/add-single-slots"
+            element={
+              <ProtectedRoute requiredRole="wellness_guide">
+                <AddSingleSlots />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Protected Routes */}
           <Route

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // MongoDB connection URL from environment variable
-const mongoURI = process.env.MONGO_URI || 'mongodb+srv://vinayaksinghal839:fkwtiLpWQlMuaaAw@cluster0.cbgfuts.mongodb.net/urban_pilgrim?retryWrites=true&w=majority&appName=Cluster0';
+const mongoURI = process.env.MONGO_URI;
 
 // Connect to MongoDB
 const connectDB = async () => {

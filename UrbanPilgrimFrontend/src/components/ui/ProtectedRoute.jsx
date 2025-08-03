@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
+  if (requiredRole && !(user.roles && user.roles.map(r => r.toLowerCase()).includes(requiredRole.toLowerCase()))) {
     // If the user is logged in but does not have the required role,
     // redirect them to the home page.
     return <Navigate to="/" replace />;
