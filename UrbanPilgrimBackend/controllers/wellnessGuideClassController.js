@@ -445,7 +445,7 @@ const processSlotGeneration = async (scheduleRequestId) => {
       }
       
     // Generate offline slots if enabled
-      if (modes.offline?.enabled) {
+    if (modes.offline?.enabled) {
       const offlineConfig = scheduleConfig.offline;
       const startDate = moment.tz(offlineConfig.dateRange.startDate, timezone);
       const endDate = moment.tz(offlineConfig.dateRange.endDate, timezone);
