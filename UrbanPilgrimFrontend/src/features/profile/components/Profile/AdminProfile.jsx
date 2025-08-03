@@ -11,7 +11,7 @@ export default function AdminProfile({ user }) {
 
   const handleDashboardClick = () => {
     console.log('Navigating to admin dashboard...');
-    navigate("/admin/dashboard");
+    navigate("/admin-dashboard");
   };
 
   return (

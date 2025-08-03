@@ -66,9 +66,18 @@ const App = () => {
           <Route path="/join-curators" element={<JoinCuratorsPage />} />
           <Route path="/join-guides" element={<JoinGuidesPage />} />
           <Route path="/become-a-wellness-guide" element={<WellnessGuideFormPage />} />
+          <Route 
+            path="/wellness-guide-form" 
+            element={
+              <ProtectedRoute>
+                <WellnessGuideFormPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/email-verification" element={<EmailVerificationPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/verify-email" element={<EmailVerificationPage />} />
           <Route path="/booking/review" element={<BookingReview />} />
           <Route path="/payment/status" element={<PaymentStatus />} />
           <Route path="/my-bookings" element={<MyBookingsPage />} />

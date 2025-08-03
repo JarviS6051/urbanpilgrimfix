@@ -9,7 +9,7 @@ const getAuthHeaders = (token) => ({
 // Send verification OTP
 export async function sendVerificationOTP(token) {
   try {
-    const response = await fetch(`${BASE_URL}/send-verification-otp`, {
+    const response = await fetch(`${BASE_URL}/email-verification/send-verification-otp`, {
       method: 'POST',
       headers: getAuthHeaders(token),
     });
@@ -29,7 +29,7 @@ export async function sendVerificationOTP(token) {
 // Verify email with OTP
 export async function verifyEmail(token, otp) {
   try {
-    const response = await fetch(`${BASE_URL}/verify-email`, {
+    const response = await fetch(`${BASE_URL}/email-verification/verify-email`, {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify({ otp }),

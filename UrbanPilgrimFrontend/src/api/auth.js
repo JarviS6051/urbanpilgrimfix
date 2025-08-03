@@ -1,7 +1,7 @@
 // src/api/auth.js
 import { BASE_URL } from '../utils/constants';
 export async function signupUser(data) {
-  const res = await fetch(`${BASE_URL}/register`, {
+  const res = await fetch(`${BASE_URL}/users/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),

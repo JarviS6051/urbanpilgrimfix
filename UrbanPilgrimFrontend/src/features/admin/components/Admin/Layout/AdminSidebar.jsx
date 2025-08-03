@@ -20,11 +20,11 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   };
 
   const menuItems = [
-    { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon },
-    { name: 'Pilgrim Experiences', href: '/admin/dashboard/pilgrim-experiences', icon: MapIcon }, // Fixed href
-    { name: 'Users', href: '/admin/dashboard/users', icon: UserGroupIcon }, // Fixed href
-    { name: 'Analytics', href: '/admin/dashboard/analytics', icon: ChartBarIcon }, // Fixed href
-    { name: 'Settings', href: '/admin/dashboard/settings', icon: CogIcon }, // Fixed href
+    { name: 'Dashboard', href: '/admin-dashboard', icon: HomeIcon },
+    { name: 'Pilgrim Experiences', href: '/admin-dashboard/pilgrim-experiences', icon: MapIcon },
+    { name: 'Users', href: '/admin-dashboard/users', icon: UserGroupIcon },
+    { name: 'Analytics', href: '/admin-dashboard/analytics', icon: ChartBarIcon },
+    { name: 'Settings', href: '/admin-dashboard/settings', icon: CogIcon },
   ];
 
   return (

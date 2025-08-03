@@ -106,7 +106,7 @@ const AdminDashboard = () => {
           <button 
             onClick={() => {
               console.log('Navigate to create experience');
-              navigate('/admin/dashboard/pilgrim-experiences/create');
+              navigate('pilgrim-experiences/create');
             }}
             className="p-4 text-left border border-gray-200 rounded-lg hover:border-amber-300 hover:shadow-md transition-all duration-200"
           >
@@ -118,7 +118,7 @@ const AdminDashboard = () => {
           <button 
             onClick={() => {
               console.log('Navigate to manage experiences');
-              navigate('/admin/dashboard/pilgrim-experiences');
+              navigate('pilgrim-experiences');
             }}
             className="p-4 text-left border border-gray-200 rounded-lg hover:border-amber-300 hover:shadow-md transition-all duration-200"
           >
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
           <button 
             onClick={() => {
               console.log('Navigate to pending wellness guides');
-              navigate('/admin/dashboard/pending-wellness-guides');
+              navigate('pending-wellness-guides');
             }}
             className="p-4 text-left border border-gray-200 rounded-lg hover:border-amber-300 hover:shadow-md transition-all duration-200"
           >
@@ -142,7 +142,7 @@ const AdminDashboard = () => {
           <button 
             onClick={() => {
               console.log('Navigate to pending wellness guide classes');
-              navigate('/admin/dashboard/pending-wellness-guide-classes');
+              navigate('pending-wellness-guide-classes');
             }}
             className="p-4 text-left border border-gray-200 rounded-lg hover:border-amber-300 hover:shadow-md transition-all duration-200"
           >
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
           <button 
             onClick={() => {
               console.log('Navigate to analytics');
-              navigate('/admin/dashboard/analytics');
+              navigate('analytics');
             }}
             className="p-4 text-left border border-gray-200 rounded-lg hover:border-amber-300 hover:shadow-md transition-all duration-200"
           >

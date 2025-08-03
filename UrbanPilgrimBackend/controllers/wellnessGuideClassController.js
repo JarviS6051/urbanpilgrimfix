@@ -864,6 +864,7 @@ const getPendingClasses = async (req, res) => {
     const filter = { 
       isActive: true,
       approvedAt: null, // Only show classes that haven't been approved yet
+      status: { $in: ['draft', 'pending_approval'] }, // Simplified filter
       $or: [
         // All draft classes (includes completed slot generation)
         { status: 'draft' },
@@ -871,6 +872,8 @@ const getPendingClasses = async (req, res) => {
         { status: 'pending_approval' }
       ]
     };
+    
+    console.log('DEBUG - getPendingClasses filter:', JSON.stringify(filter, null, 2));
     
     const pendingClasses = await WellnessGuideClass.find(filter)
       .populate('wellnessGuide', 'user profilePictures', {
@@ -880,6 +883,11 @@ const getPendingClasses = async (req, res) => {
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
+    
+    console.log('DEBUG - Found pending classes:', pendingClasses.length);
+    pendingClasses.forEach(cls => {
+      console.log(`  Class ${cls._id}: status=${cls.status}, approvedAt=${cls.approvedAt}, slotsGenerated=${cls.slotsGenerated}`);
+    });
     
     // Get additional info about slot generation for each class
     const classesWithSlotInfo = await Promise.all(
@@ -968,10 +976,38 @@ const updateClassApproval = async (req, res) => {
       return res.status(404).json({ message: 'Wellness guide class not found' });
     }
     
+    // DEBUG: Log current class state
+    console.log('DEBUG - Class approval check:');
+    console.log('  Class ID:', id);
+    console.log('  Current status:', wellnessGuideClass.status);
+    console.log('  approvedAt:', wellnessGuideClass.approvedAt);
+    console.log('  slotsGenerated:', wellnessGuideClass.slotsGenerated);
+    console.log('  slotGenerationStatus:', wellnessGuideClass.slotGenerationStatus);
+    console.log('  isApproved request:', isApproved);
+    
     // UPDATED: Allow approval of both 'draft' and 'pending_approval' classes that haven't been approved yet
-    if (wellnessGuideClass.approvedAt !== null) {
+    if (wellnessGuideClass.approvedAt !== null && wellnessGuideClass.approvedAt !== undefined) {
+      console.log('DEBUG - Class already approved at:', wellnessGuideClass.approvedAt);
       return res.status(400).json({ 
-        message: 'Class has already been approved' 
+        message: 'Class has already been approved',
+        debug: {
+          currentStatus: wellnessGuideClass.status,
+          approvedAt: wellnessGuideClass.approvedAt,
+          classId: id
+        }
+      });
+    }
+    
+    // Additional check: if status is already 'active', it's likely already approved
+    if (wellnessGuideClass.status === 'active' && isApproved) {
+      console.log('DEBUG - Class status is already active');
+      return res.status(400).json({ 
+        message: 'Class has already been approved (status is active)',
+        debug: {
+          currentStatus: wellnessGuideClass.status,
+          approvedAt: wellnessGuideClass.approvedAt,
+          classId: id
+        }
       });
     }
     

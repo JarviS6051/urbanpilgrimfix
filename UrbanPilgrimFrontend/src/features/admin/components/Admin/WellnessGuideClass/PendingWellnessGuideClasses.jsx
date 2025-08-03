@@ -40,7 +40,12 @@ const PendingWellnessGuideClasses = () => {
         limit: 10
       });
       
-      setPendingClasses(response.pendingClasses || []);
+      // Filter out any classes that might already be approved (extra safety)
+      const filteredClasses = (response.pendingClasses || []).filter(cls => 
+        !cls.approvedAt && ['draft', 'pending_approval'].includes(cls.status)
+      );
+      
+      setPendingClasses(filteredClasses);
       setTotalPages(response.totalPages || 1);
     } catch (error) {
       console.error('Error fetching pending classes:', error);
@@ -66,7 +71,23 @@ const PendingWellnessGuideClasses = () => {
       alert(`Wellness guide class ${isApproved ? 'approved' : 'rejected'} successfully!`);
     } catch (error) {
       console.error('Error updating approval status:', error);
-      alert('Error updating approval status: ' + error.message);
+      
+      // Handle different error scenarios
+      const errorMessage = error.message || 'Unknown error';
+      
+      if (errorMessage.includes('already been approved')) {
+        // Class was already approved by someone else - remove from list silently
+        setPendingClasses(prev => prev.filter(cls => cls._id !== classId));
+        alert('This class has already been approved by another admin. Removing from pending list.');
+      } else if (errorMessage.includes('not found')) {
+        // Class was deleted or doesn't exist - remove from list
+        setPendingClasses(prev => prev.filter(cls => cls._id !== classId));
+        alert('This class no longer exists. Removing from pending list.');
+      } else if (errorMessage.includes('slot generation')) {
+        alert('This class is still processing time slots. Please wait for completion before approving.');
+      } else {
+        alert('Error updating approval status: ' + errorMessage);
+      }
     } finally {
       setActionLoading(prev => ({ ...prev, [classId]: false }));
     }

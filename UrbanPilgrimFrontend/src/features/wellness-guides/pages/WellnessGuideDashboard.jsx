@@ -517,7 +517,7 @@ const WellnessGuideDashboard = () => {
                 Define your specialty, set your schedule, and begin helping others on their wellness journey.
               </p>
               <button
-                onClick={() => navigate('/wellness-guide/create-class')}
+                onClick={() => navigate('/create-class')}
                 className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 font-medium"
               >
                 Create Your Class
