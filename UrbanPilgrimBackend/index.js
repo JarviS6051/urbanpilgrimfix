@@ -14,11 +14,15 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173','https://urban-pilgrim-sigma.vercel.app','https://urban-pilgrim-three.vercel.app'], // your frontend origin
+  origin: [
+    'http://localhost:5173',
+    'https://urban-pilgrim-three.vercel.app',
+    'https://urban-pilgrim-sigma.vercel.app'
+  ],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -41,6 +45,15 @@ app.use('/api/admin/bookings', require('./routes/adminPilgrimBookingRoutes'));
 app.use('/api/admin/pilgrim-experiences', require('./routes/pilgrimExperienceDiscountRoutes'));
 
 // Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// Health check for root
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -49,13 +62,32 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 404 handler (fixed - no asterisk pattern)
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
+// Serve static files from frontend build (if serving frontend from backend)
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React app build directory
+  app.use(express.static(path.join(__dirname, '../UrbanPilgrimFrontend/dist')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    // Don't serve index.html for API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({
+        success: false,
+        message: 'API route not found'
+      });
+    }
+    
+    res.sendFile(path.join(__dirname, '../UrbanPilgrimFrontend/dist', 'index.html'));
   });
-});
+} else {
+  // Development: Just handle API 404s
+  app.use('/api/*', (req, res) => {
+    res.status(404).json({
+      success: false,
+      message: 'API route not found'
+    });
+  });
+}
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -68,8 +100,9 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
 module.exports = app;

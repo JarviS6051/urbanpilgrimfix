@@ -1,6 +1,26 @@
 // src/utils/constants.js
-export const BASE_URL = 'https://urbanpilgrim-3sjq.onrender.com/api';
-// export const BASE_URL = 'http://localhost:3000/api';
+
+// Automatically detect environment and use appropriate API URL
+const getApiUrl = () => {
+  // For mobile/production, always use the deployed API
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return 'https://urbanpilgrim-3sjq.onrender.com/api';
+  }
+  
+  // For local development
+  return 'http://localhost:3000/api';
+};
+
+export const BASE_URL = getApiUrl();
+
+// Debug info
+if (typeof window !== 'undefined') {
+  console.log('Current environment:', {
+    hostname: window.location.hostname,
+    apiUrl: BASE_URL,
+    isProduction: window.location.hostname !== 'localhost'
+  });
+}
 
 export const PRICE_RANGES = [
   { value: 'under-25000', label: 'Under ₹25,000' },

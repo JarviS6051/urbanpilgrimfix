@@ -3,30 +3,53 @@ import axios from 'axios';
 import { getTokenFromCookie } from '../utils/cookies';
 import { BASE_URL } from '../utils/constants';
 
-// Use import.meta.env instead of process.env for Vite
-const API_BASE_URL = import.meta.env.REACT_APP_API_URL || BASE_URL;
-
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: BASE_URL,
+  timeout: 10000, // 10 second timeout
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Add auth token to requests
-api.interceptors.request.use((config) => {
-  const token = getTokenFromCookie();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use(
+  (config) => {
+    const token = getTokenFromCookie();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log('API Request:', config.method.toUpperCase(), config.url);
+    return config;
+  },
+  (error) => {
+    console.error('Request interceptor error:', error);
+    return Promise.reject(error);
   }
-  return config;
-});
+);
+
+// Add response interceptor for better error handling
+api.interceptors.response.use(
+  (response) => {
+    console.log('API Response:', response.status, response.config.url);
+    return response;
+  },
+  (error) => {
+    console.error('API Error:', error.response?.status, error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
 
 export const pilgrimExperienceApi = {
   // Get all pilgrim experiences
   getAll: async () => {
     try {
+      console.log('Fetching pilgrim experiences...');
       const response = await api.get('/pilgrim-experiences');
+      console.log('Raw API response:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Error in getAll:', error);
       throw error.response?.data || error.message;
     }
   },
