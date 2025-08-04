@@ -303,10 +303,10 @@ const PilgrimExperienceDetail = () => {
                 Try Again
               </button>
               <button 
-                onClick={() => navigate('/pilgrim-experiences')}
+                onClick={() => navigate('/pilgrim-retreats')}
                 className="px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50"
               >
-                Back to Experiences
+                Back to Retreats
               </button>
             </div>
           </div>
@@ -322,10 +322,10 @@ const PilgrimExperienceDetail = () => {
           <h3 className="text-lg font-medium text-gray-900 mb-2">Experience Not Found</h3>
           <p className="text-gray-600 mb-4">The requested experience could not be found.</p>
           <button 
-            onClick={() => navigate('/pilgrim-experiences')}
+            onClick={() => navigate('/pilgrim-retreats')}
             className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700"
           >
-            Back to Experiences
+            Back to Retreats
           </button>
         </div>
       </div>
@@ -339,7 +339,7 @@ const PilgrimExperienceDetail = () => {
         <div className="px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <button
-              onClick={() => navigate('/pilgrim-experiences')}
+              onClick={() => navigate('/pilgrim-retreats')}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
             >
               <ArrowLeftIcon className="h-5 w-5" />
@@ -398,7 +398,7 @@ const PilgrimExperienceDetail = () => {
           )}
           {/* Back Button */}
           <button
-            onClick={() => navigate('/pilgrim-experiences')}
+            onClick={() => navigate('/pilgrim-retreats')}
             className="absolute top-8 left-8 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-lg"
           >
             <ArrowLeftIcon className="h-5 w-5" />
