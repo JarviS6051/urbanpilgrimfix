@@ -14,17 +14,21 @@ const Header = () => {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+      // Simple click outside detection
+      const dropdown = document.querySelector('[data-dropdown="user-dropdown"]');
+      if (dropdown && !dropdown.contains(event.target)) {
         setShowUserDropdown(false);
       }
     }
+    
     if (showUserDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 0);
     }
+    
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [showUserDropdown]);
 
@@ -76,17 +80,33 @@ const Header = () => {
         @media (max-width: 700px) {
           .header-main {
             min-height: 70px !important;
-            padding: 0.5rem 0.7rem !important;
+            padding: 0.5rem 1rem !important;
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
+            align-items: center !important;
+            gap: 1rem !important;
           }
           .header-logo-img {
-            height: 50px !important;
+            height: 45px !important;
           }
           .header-desktop-nav, .header-desktop-icons {
             display: none !important;
           }
           .header-mobile-menu-btn {
             display: flex !important;
+            justify-self: start !important;
           }
+          .header-mobile-logo {
+            justify-self: center !important;
+          }
+          .header-mobile-icons {
+            display: flex !important;
+            gap: 1rem !important;
+            justify-self: end !important;
+          }
+        }
+        .header-mobile-icons {
+          display: none;
         }
         .header-mobile-menu-btn {
           display: none;
@@ -120,6 +140,13 @@ const Header = () => {
           gap: 2rem;
           margin-top: 2rem;
         }
+        /* Dropdown hover styles */
+        .header-dropdown-item:hover {
+          background-color: #f3f4f6 !important;
+        }
+        .header-dropdown-item {
+          transition: background-color 0.2s ease;
+        }
       `}</style>
       {/* Main Header */}
       <div className="header-main" style={{ 
@@ -132,8 +159,17 @@ const Header = () => {
         maxHeight: '90px',
         boxSizing: 'border-box'
       }}>
+        {/* Mobile Hamburger Button */}
+        <button className="header-mobile-menu-btn" onClick={() => setMobileMenuOpen((prev) => !prev)}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#133A5E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
         {/* Logo */}
-        <Link to="/" style={{ 
+        <Link to="/" className="header-mobile-logo" style={{ 
           display: 'flex', 
           alignItems: 'center', 
           textDecoration: 'none',
@@ -151,6 +187,172 @@ const Header = () => {
             }} 
           />
         </Link>
+
+        {/* Mobile Icons */}
+        <div className="header-mobile-icons">
+          {/* Search Icon */}
+          <button style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            padding: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '40px',
+            width: '40px'
+          }}>
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#222">
+              <circle cx="11" cy="11" r="7" strokeWidth="2"/>
+              <path d="M21 21l-4.35-4.35" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+          
+          {/* User Icon with Dropdown */}
+          <div 
+            data-dropdown="user-dropdown"
+            style={{ 
+              position: 'relative',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <button
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer', 
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '40px',
+                width: '40px'
+              }}
+              onClick={() => setShowUserDropdown(!showUserDropdown)}
+            >
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#222">
+                <circle cx="12" cy="8" r="4" strokeWidth="2"/>
+                <path d="M4 20c0-4 4-7 8-7s8 3 8 7" strokeWidth="2"/>
+              </svg>
+            </button>
+            
+            {showUserDropdown && (
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  right: 0, 
+                  top: '100%', 
+                  background: 'white', 
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)', 
+                  borderRadius: 8, 
+                  minWidth: 180, 
+                  zIndex: 9999, 
+                  marginTop: '8px',
+                  border: '1px solid #e5e7eb',
+                  overflow: 'hidden'
+                }}
+              >
+                {token && user ? (
+                  <div>
+                    <div 
+                      onClick={() => {
+                        console.log('Profile clicked');
+                        setShowUserDropdown(false);
+                        window.location.href = '/profile';
+                      }}
+                      style={{ 
+                        padding: '12px 16px', 
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #f0f0f0',
+                        color: '#333',
+                        fontSize: '14px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    >
+                      Profile
+                    </div>
+                    <div 
+                      onClick={() => {
+                        console.log('My Bookings clicked');
+                        setShowUserDropdown(false);
+                        window.location.href = '/my-bookings';
+                      }}
+                      style={{ 
+                        padding: '12px 16px', 
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #f0f0f0',
+                        color: '#333',
+                        fontSize: '14px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    >
+                      My Bookings
+                    </div>
+                    <div 
+                      onClick={() => {
+                        console.log('Logout clicked');
+                        setShowUserDropdown(false);
+                        handleLogout();
+                      }}
+                      style={{ 
+                        padding: '12px 16px', 
+                        cursor: 'pointer',
+                        color: '#dc2626',
+                        fontSize: '14px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#fef2f2'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    >
+                      Logout
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div 
+                      onClick={() => {
+                        console.log('Login clicked');
+                        setShowUserDropdown(false);
+                        window.location.href = '/login';
+                      }}
+                      style={{ 
+                        padding: '12px 16px', 
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #f0f0f0',
+                        color: '#333',
+                        fontSize: '14px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    >
+                      Login
+                    </div>
+                    <div 
+                      onClick={() => {
+                        console.log('Sign Up clicked');
+                        setShowUserDropdown(false);
+                        window.location.href = '/signup';
+                      }}
+                      style={{ 
+                        padding: '12px 16px', 
+                        cursor: 'pointer',
+                        color: '#333',
+                        fontSize: '14px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    >
+                      Sign Up
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
         
         {/* Desktop Navigation */}
         <nav className="header-desktop-nav" style={{ 
@@ -313,42 +515,65 @@ const Header = () => {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)', 
                 borderRadius: 6, 
                 minWidth: 160, 
-                zIndex: 20, 
+                zIndex: 1001, 
                 padding: '0.7rem 0',
-                marginTop: '8px'
-              }}>
+                marginTop: '8px',
+                border: '1px solid #e5e7eb',
+                pointerEvents: 'auto'
+              }}
+              onClick={(e) => e.stopPropagation()}>
                 {token && user ? (
                   <>
                     <Link 
-                      to="/profile" 
+                      to="/profile"
+                      className="header-dropdown-item" 
                       style={{ 
                         display: 'block', 
                         padding: '0.6rem 1.2rem', 
                         color: '#222', 
                         fontSize: 15, 
                         textDecoration: 'none', 
-                        whiteSpace: 'nowrap' 
+                        whiteSpace: 'nowrap',
+                        cursor: 'pointer'
                       }} 
-                      onClick={() => setShowUserDropdown(false)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert('Dropdown clicked!');
+                        console.log('Dropdown item clicked');
+                        setShowUserDropdown(false);
+                      }}
                     >
                       Profile
                     </Link>
                     <Link 
-                      to="/my-bookings" 
+                      to="/my-bookings"
+                      className="header-dropdown-item" 
                       style={{ 
                         display: 'block', 
                         padding: '0.6rem 1.2rem', 
                         color: '#222', 
                         fontSize: 15, 
                         textDecoration: 'none', 
-                        whiteSpace: 'nowrap' 
+                        whiteSpace: 'nowrap',
+                        cursor: 'pointer'
                       }} 
-                      onClick={() => setShowUserDropdown(false)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert('Dropdown clicked!');
+                        console.log('Dropdown item clicked');
+                        setShowUserDropdown(false);
+                      }}
                     >
                       My Bookings
                     </Link>
                     <button
-                      onClick={handleLogout}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Logout button clicked');
+                        setShowUserDropdown(false);
+                        handleLogout();
+                      }}
+                      className="header-dropdown-item"
                       style={{ 
                         display: 'block', 
                         width: '100%', 
@@ -359,7 +584,8 @@ const Header = () => {
                         background: 'none', 
                         border: 'none', 
                         cursor: 'pointer', 
-                        whiteSpace: 'nowrap' 
+                        whiteSpace: 'nowrap',
+                        pointerEvents: 'auto'
                       }}
                     >
                       Logout
@@ -368,30 +594,44 @@ const Header = () => {
                 ) : (
                   <>
                     <Link 
-                      to="/login" 
+                      to="/login"
+                      className="header-dropdown-item" 
                       style={{ 
                         display: 'block', 
                         padding: '0.6rem 1.2rem', 
                         color: '#222', 
                         fontSize: 15, 
                         textDecoration: 'none', 
-                        whiteSpace: 'nowrap' 
+                        whiteSpace: 'nowrap',
+                        cursor: 'pointer'
                       }} 
-                      onClick={() => setShowUserDropdown(false)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert('Dropdown clicked!');
+                        console.log('Dropdown item clicked');
+                        setShowUserDropdown(false);
+                      }}
                     >
                       Login
                     </Link>
                     <Link 
-                      to="/signup" 
+                      to="/signup"
+                      className="header-dropdown-item" 
                       style={{ 
                         display: 'block', 
                         padding: '0.6rem 1.2rem', 
                         color: '#222', 
                         fontSize: 15, 
                         textDecoration: 'none', 
-                        whiteSpace: 'nowrap' 
+                        whiteSpace: 'nowrap',
+                        cursor: 'pointer'
                       }} 
-                      onClick={() => setShowUserDropdown(false)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert('Dropdown clicked!');
+                        console.log('Dropdown item clicked');
+                        setShowUserDropdown(false);
+                      }}
                     >
                       Sign Up
                     </Link>
@@ -419,37 +659,25 @@ const Header = () => {
             </svg>
           </button>
         </div>
-        
-        {/* Mobile Hamburger Button */}
-        <button className="header-mobile-menu-btn" onClick={() => setMobileMenuOpen((prev) => !prev)}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#133A5E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
+
       </div>
       
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="header-mobile-menu">
+          <button onClick={() => setMobileMenuOpen(false)} style={{ position: 'absolute', top: 20, right: 20, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" stroke="#222" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <Link to="/" className="nav-link-animated" style={{ color: isActive('/') ? '#133A5E' : '#222', fontWeight: 400 }} onClick={() => setMobileMenuOpen(false)}>Home</Link>
           <Link to="/pilgrim-retreats" className="nav-link-animated" style={{ color: isActive('/pilgrim-retreats') ? '#133A5E' : '#222', fontWeight: 400 }} onClick={() => setMobileMenuOpen(false)}>Pilgrim Retreats</Link>
           <Link to="/pilgrim-sessions" className="nav-link-animated" style={{ color: isActive('/pilgrim-sessions') ? '#133A5E' : '#222', fontWeight: 400 }} onClick={() => setMobileMenuOpen(false)}>Pilgrim Sessions</Link>
           <Link to="/wellness-guide-classes" className="nav-link-animated" style={{ color: isActive('/wellness-guide-classes') ? '#133A5E' : '#222', fontWeight: 400 }} onClick={() => setMobileMenuOpen(false)}>Pilgrim Guides</Link>
           <Link to="/pilgrim-bazaar" className="nav-link-animated" style={{ color: isActive('/pilgrim-bazaar') ? '#133A5E' : '#222', fontWeight: 400 }} onClick={() => setMobileMenuOpen(false)}>Pilgrim Bazaar</Link>
           <Link to="/contact" className="nav-link-animated" style={{ color: isActive('/contact') ? '#133A5E' : '#222', fontWeight: 400 }} onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-          <div className="header-mobile-icons">
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-              <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#222"><circle cx="11" cy="11" r="7" strokeWidth="2"/><path d="M21 21l-4.35-4.35" strokeWidth="2" strokeLinecap="round"/></svg>
-            </button>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-              <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#222"><circle cx="12" cy="8" r="4" strokeWidth="2"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7" strokeWidth="2"/></svg>
-            </button>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-              <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#222"><path d="M6 7V6a6 6 0 1112 0v1" strokeWidth="2"/><rect x="3" y="7" width="18" height="13" rx="2" strokeWidth="2"/></svg>
-            </button>
-          </div>
+
         </div>
       )}
     </header>
