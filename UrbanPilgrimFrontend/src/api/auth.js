@@ -26,3 +26,12 @@ export async function loginUser(data) {
   });
   return res.json();
 }
+
+export async function googleAuth(credential) {
+  const res = await fetch(`${BASE_URL}/users/google-auth`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ credential }),
+  });
+  return res.json();
+}

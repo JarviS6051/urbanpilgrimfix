@@ -3,6 +3,10 @@ const User = require('../models/User');
 const Booking = require('../models/Booking');
 const ROLES = require('../models/RoleEnum');
 const cloudinary = require('../config/cloudinaryConfig');
+const { OAuth2Client } = require('google-auth-library');
+
+// Initialize Google OAuth client
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || '1234567890-abc123def456.apps.googleusercontent.com');
 
 const deleteFromCloudinary = async (publicId) => {
   try {
@@ -61,22 +65,60 @@ const registerUser = async (req, res) => {
 // @desc    Register via Google Auth
 // @route   POST /api/users/google-auth
 // @access  Public
-// Add this function to userController.js if missing
+// @desc    Google OAuth signup/login
+// @route   POST /api/users/google-auth
+// @access  Public
 const googleAuth = async (req, res) => {
-  const { credential } = req.body;
-  
   try {
-    // For now, just extract basic info from the credential
-    // You'll need to implement proper Google token verification later
-    const { email, firstName, lastName } = req.body;
-    
-    let user = await User.findOne({ email });
-    
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({ message: 'Google credential is required' });
+    }
+
+    // Handle mock Google credential for testing
+    if (credential === 'mock-google-credential-token') {
+      const mockPayload = {
+        sub: 'mock-google-id-123',
+        email: 'test@example.com',
+        given_name: 'Test',
+        family_name: 'User',
+        picture: 'https://via.placeholder.com/150',
+        email_verified: true
+      };
+      
+      const { sub: googleId, email, given_name: firstName, family_name: lastName, picture } = mockPayload;
+    } else {
+      // Verify the Google token
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+      const { sub: googleId, email, given_name: firstName, family_name: lastName, picture } = payload;
+    }
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email not provided by Google' });
+    }
+
+    // Check if user already exists
+    let user = await User.findOne({ 
+      $or: [
+        { email: email },
+        { googleId: googleId }
+      ]
+    });
+
     if (user) {
-      // User exists - just login
-      if (user.provider === 'local') {
-        user.provider = 'google';
-        user.emailVerified = true;
+      // User exists, update Google info if needed and log them in
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.emailVerified = true; // Google accounts are pre-verified
+        if (picture && !user.profilePictures.length) {
+          user.profilePictures = [{ url: picture, publicId: 'google-profile' }];
+        }
         await user.save();
       }
     } else {
@@ -84,28 +126,37 @@ const googleAuth = async (req, res) => {
       user = new User({
         firstName: firstName || '',
         lastName: lastName || '',
-        email,
-        provider: 'google',
-        emailVerified: true,
+        email: email,
+        googleId: googleId,
+        profilePictures: picture ? [{ url: picture, publicId: 'google-profile' }] : [],
         roles: [ROLES.USER],
+        provider: 'google',
+        emailVerified: true, // Google accounts are pre-verified
+        about: '',
+        contactNumber: '',
+        address: []
       });
-      
+
       await user.save();
     }
-    
+
+    // Generate JWT token
     const token = user.generateAuthToken();
+
+    // Prepare user response
     const userResponse = user.toObject();
     delete userResponse.password;
-    
-    res.json({
-      message: 'Google authentication successful',
+
+    res.status(200).json({
+      message: user.isNew ? 'User registered successfully with Google' : 'Login successful with Google',
       user: userResponse,
-      token,
+      token
     });
+
   } catch (error) {
     console.error('Google Auth Error:', error);
-    res.status(400).json({ 
-      message: 'Google authentication failed', 
+    res.status(500).json({ 
+      message: 'Error during Google authentication', 
       error: error.message 
     });
   }

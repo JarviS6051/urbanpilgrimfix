@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { signupUser } from '../../../../api/auth';
+import { signupUser, googleAuth } from '../../../../api/auth';
 import { setAuth } from '../../../../slices/authSlice';
+import GoogleOAuth from '../../../../components/auth/GoogleOAuth';
 
 export default function UserSignupForm({ onSuccess }) {
   const [formData, setFormData] = useState({
@@ -22,6 +23,38 @@ export default function UserSignupForm({ onSuccess }) {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUser) => {
+    setLoading(true);
+    try {
+      const response = await googleAuth(googleUser.credential);
+      
+      if (response.user && response.token) {
+        dispatch(setAuth({
+          user: response.user,
+          token: response.token
+        }));
+        
+        localStorage.setItem('token', response.token);
+        
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        setError(response.message || 'Google signup failed');
+      }
+    } catch (error) {
+      console.error('Google signup error:', error);
+      setError('Google signup failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (error) => {
+    console.error('Google OAuth error:', error);
+    setError('Google authentication failed. Please try again.');
   };
 
   const handleSubmit = async (e) => {
@@ -206,6 +239,25 @@ export default function UserSignupForm({ onSuccess }) {
       >
         {loading ? 'Creating Account...' : 'Sign Up'}
       </button>
+
+      {/* Divider */}
+      <div className="mt-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Google OAuth Button */}
+      <GoogleOAuth 
+        onSuccess={handleGoogleSuccess}
+        onError={handleGoogleError}
+        text="Sign up with Google"
+      />
     </form>
   );
 }

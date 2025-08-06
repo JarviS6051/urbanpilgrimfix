@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../../../api/auth';
+import { loginUser, googleAuth } from '../../../../api/auth';
 import { setAuth } from '../../../../slices/authSlice';
 import { setTokenInCookie } from '../../../../utils/cookies';
+import GoogleOAuth from '../../../../components/auth/GoogleOAuth';
 
 export default function LoginForm({ onSuccess }) {
   const [formData, setFormData] = useState({
@@ -18,6 +19,39 @@ export default function LoginForm({ onSuccess }) {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUser) => {
+    setLoading(true);
+    try {
+      const response = await googleAuth(googleUser.credential);
+      
+      if (response.user && response.token) {
+        dispatch(setAuth({
+          user: response.user,
+          token: response.token
+        }));
+        
+        localStorage.setItem('token', response.token);
+        setTokenInCookie(response.token);
+        
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        setError(response.message || 'Google login failed');
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      setError('Google login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (error) => {
+    console.error('Google OAuth error:', error);
+    setError('Google authentication failed. Please try again.');
   };
 
   const handleSubmit = async (e) => {
@@ -107,6 +141,25 @@ export default function LoginForm({ onSuccess }) {
       >
         {loading ? 'Signing In...' : 'Sign In'}
       </button>
+
+      {/* Divider */}
+      <div className="mt-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Google OAuth Button */}
+      <GoogleOAuth 
+        onSuccess={handleGoogleSuccess}
+        onError={handleGoogleError}
+        text="Sign in with Google"
+      />
     </form>
   );
 }

@@ -533,8 +533,6 @@ const Header = () => {
                       }} 
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert('Dropdown clicked!');
-                        console.log('Dropdown item clicked');
                         setShowUserDropdown(false);
                       }}
                     >
@@ -554,8 +552,6 @@ const Header = () => {
                       }} 
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert('Dropdown clicked!');
-                        console.log('Dropdown item clicked');
                         setShowUserDropdown(false);
                       }}
                     >
@@ -564,7 +560,6 @@ const Header = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log('Logout button clicked');
                         setShowUserDropdown(false);
                         handleLogout();
                       }}
@@ -602,8 +597,6 @@ const Header = () => {
                       }} 
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert('Dropdown clicked!');
-                        console.log('Dropdown item clicked');
                         setShowUserDropdown(false);
                       }}
                     >
@@ -623,8 +616,6 @@ const Header = () => {
                       }} 
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert('Dropdown clicked!');
-                        console.log('Dropdown item clicked');
                         setShowUserDropdown(false);
                       }}
                     >
