@@ -17,7 +17,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'https://urban-pilgrim-three.vercel.app',
-    'https://urban-pilgrim-sigma.vercel.app'
+    'https://urban-pilgrim-sigma.vercel.app',
+    'https://urbanpilgrimfix.vercel.app'
   ],
   credentials: true
 }));
