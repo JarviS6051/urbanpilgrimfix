@@ -81,7 +81,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 } else {
   // Development: Just handle API 404s
-  app.use('/api/*', (req, res) => {
+  app.use(/^\/api\/.*$/, (req, res) => {
     res.status(404).json({
       success: false,
       message: 'API route not found'
