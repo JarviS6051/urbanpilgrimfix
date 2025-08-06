@@ -15,8 +15,8 @@ const getApiUrl = () => {
     if (isLocal) {
       return `${protocol}//${hostname}:3000/api`;
     }
-    // Production default
-    return `${protocol}//${hostname}/api`;
+    // Production default - point to Render backend
+    return 'https://urbanpilgrimfix.onrender.com/api';
   }
 
   // 3) Fallback (SSR / tests)
