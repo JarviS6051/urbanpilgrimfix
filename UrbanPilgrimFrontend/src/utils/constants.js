@@ -20,7 +20,7 @@ const getApiUrl = () => {
   }
 
   // 3) Fallback (SSR / tests)
-  return 'http://localhost:3000/api';
+  return 'https://urbanpilgrimfix.onrender.com/api';
 };
 
 export const BASE_URL = getApiUrl();
