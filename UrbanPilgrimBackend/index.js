@@ -67,18 +67,6 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from the React app build directory
   app.use(express.static(path.join(__dirname, '../UrbanPilgrimFrontend/dist')));
   
-  // Handle React routing, return all requests to React app
-  app.get('/*', (req, res) => {
-    // Don't serve index.html for API routes
-    if (req.path.startsWith('/api/')) {
-      return res.status(404).json({
-        success: false,
-        message: 'API route not found'
-      });
-    }
-    
-    res.sendFile(path.join(__dirname, '../UrbanPilgrimFrontend/dist', 'index.html'));
-  });
 } else {
   // Development: Just handle API 404s
   app.use(/^\/api\/.*$/, (req, res) => {
