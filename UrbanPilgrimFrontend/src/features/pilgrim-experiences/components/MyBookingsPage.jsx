@@ -128,35 +128,55 @@ const MyBookingsPage = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-6">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-6 space-y-4 sm:space-y-0">
+            <div className="text-center sm:text-left">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                 My Bookings
               </h1>
-              <p className="text-sm sm:text-base text-gray-600 mt-1">
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-1">
                 {pagination.totalBookings} booking{pagination.totalBookings !== 1 ? 's' : ''} found
               </p>
             </div>
             
             {/* Quick Actions */}
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => navigate('/pilgrim-retreats')}
-                className="hidden sm:inline-flex bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
-              >
-                Book Experience
-              </button>
-              <button
-                onClick={() => navigate('/wellness-guide-classes')}
-                className="hidden sm:inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-              >
-                Book Class
-              </button>
+            <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
+              {/* Mobile Action Buttons */}
+              <div className="flex sm:hidden w-full space-x-2">
+                <button
+                  onClick={() => navigate('/pilgrim-retreats')}
+                  className="flex-1 bg-emerald-600 text-white px-3 py-2 rounded-lg hover:bg-emerald-700 transition-colors text-xs font-medium"
+                >
+                  Book Experience
+                </button>
+                <button
+                  onClick={() => navigate('/wellness-guide-classes')}
+                  className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium"
+                >
+                  Book Class
+                </button>
+              </div>
+              
+              {/* Desktop Action Buttons */}
+              <div className="hidden sm:flex items-center space-x-3">
+                <button
+                  onClick={() => navigate('/pilgrim-retreats')}
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                >
+                  Book Experience
+                </button>
+                <button
+                  onClick={() => navigate('/wellness-guide-classes')}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  Book Class
+                </button>
+              </div>
+              
               <button
                 onClick={() => navigate('/')}
-                className="text-gray-600 hover:text-gray-800 transition-colors"
+                className="text-gray-600 hover:text-gray-800 transition-colors p-2"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
               </button>
@@ -166,18 +186,18 @@ const MyBookingsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {/* Status Filter */}
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Filter by Status
               </label>
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
                 {statusOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -189,13 +209,13 @@ const MyBookingsPage = () => {
 
             {/* Booking Type Filter */}
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Filter by Type
               </label>
               <select
                 value={filters.bookingType}
                 onChange={(e) => handleFilterChange('bookingType', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
                 {bookingTypeOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -212,7 +232,7 @@ const MyBookingsPage = () => {
                   setFilters({ status: 'all', bookingType: 'all' });
                   setPagination(prev => ({ ...prev, currentPage: 1 }));
                 }}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
                 Reset Filters
               </button>
@@ -222,49 +242,51 @@ const MyBookingsPage = () => {
 
         {/* Error State */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center">
-              <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 sm:mb-6">
+            <div className="flex items-start sm:items-center">
+              <svg className="w-5 h-5 text-red-400 mr-2 mt-0.5 sm:mt-0 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-red-800">{error}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-red-800 text-sm">{error}</p>
+                <button
+                  onClick={fetchBookings}
+                  className="mt-2 text-xs sm:text-sm text-red-600 hover:text-red-800 font-medium"
+                >
+                  Try Again
+                </button>
+              </div>
             </div>
-            <button
-              onClick={fetchBookings}
-              className="mt-3 text-sm text-red-600 hover:text-red-800 font-medium"
-            >
-              Try Again
-            </button>
           </div>
         )}
 
         {/* Bookings List */}
         {!loading && !error && bookings.length === 0 ? (
-          <div className="text-center py-12">
-            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center py-8 sm:py-12">
+            <svg className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No bookings found</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">No bookings found</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
               You haven't made any bookings yet. Start exploring our experiences and classes!
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center px-4">
               <button
                 onClick={() => navigate('/pilgrim-experiences')}
-                className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                className="bg-emerald-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
               >
                 Browse Experiences
               </button>
               <button
                 onClick={() => navigate('/wellness-guide-classes')}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
               >
                 Browse Classes
               </button>
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {bookings.map(booking => (
               <BookingCard
                 key={booking.bookingId}
@@ -276,15 +298,15 @@ const MyBookingsPage = () => {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between mt-8">
-            <div className="text-sm text-gray-700">
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-6 sm:mt-8 space-y-4 sm:space-y-0">
+            <div className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
               Showing page {pagination.currentPage} of {pagination.totalPages}
             </div>
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => handlePageChange(pagination.currentPage - 1)}
                 disabled={!pagination.hasPrevPage}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   pagination.hasPrevPage
                     ? 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -292,13 +314,13 @@ const MyBookingsPage = () => {
               >
                 Previous
               </button>
-              <span className="text-sm text-gray-700">
+              <span className="text-xs sm:text-sm text-gray-700 px-2">
                 {pagination.currentPage} of {pagination.totalPages}
               </span>
               <button
                 onClick={() => handlePageChange(pagination.currentPage + 1)}
                 disabled={!pagination.hasNextPage}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   pagination.hasNextPage
                     ? 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'

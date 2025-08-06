@@ -96,19 +96,42 @@ export async function getUserBookings(token, page = 1, limit = 10, status = null
 // Get booking details
 export async function getBookingDetails(token, bookingId) {
   try {
-    const response = await fetch(`${BASE_URL}/booking/${bookingId}`, {
+    console.log('Fetching booking details for:', bookingId);
+    console.log('API URL:', `${BASE_URL}/users/booking/${bookingId}`);
+    console.log('Token:', token ? 'Present' : 'Missing');
+    
+    const headers = getAuthHeaders(token);
+    console.log('Request headers:', headers);
+    
+    console.log('Making fetch request...');
+    const response = await fetch(`${BASE_URL}/users/booking/${bookingId}`, {
       method: 'GET',
-      headers: getAuthHeaders(token),
+      headers: headers,
     });
     
+    console.log('Response received');
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+    console.log('Response status text:', response.statusText);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+    
     if (!response.ok) {
+      console.log('Response not ok, trying to read error data...');
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to fetch booking details');
+      console.error('API Error:', errorData);
+      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
     }
     
-    return await response.json();
+    console.log('Response ok, trying to read JSON...');
+    const responseData = await response.json();
+    console.log('Booking details response data:', responseData);
+    
+    return responseData;
   } catch (error) {
     console.error('Error fetching booking details:', error);
+    console.error('Error type:', error.constructor.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     throw error;
   }
 }

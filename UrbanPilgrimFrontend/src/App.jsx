@@ -38,6 +38,7 @@ import PilgrimSessionsPage from './features/pilgrim-sessions/pages/PilgrimSessio
 import BookingReview from './features/pilgrim-experiences/components/BookingReview';
 import PaymentStatus from './features/pilgrim-experiences/components/PaymentStatus';
 import MyBookingsPage from './features/pilgrim-experiences/components/MyBookingsPage';
+import BookingDetailsPage from './features/pilgrim-experiences/components/BookingDetailsPage';
 import ViewTimeSlots from './features/wellness-guides/pages/ViewTimeSlots';
 import AddRecurringSlots from './features/wellness-guides/pages/AddRecurringSlots';
 import AddSingleSlots from './features/wellness-guides/pages/AddSingleSlots';
@@ -81,6 +82,7 @@ const App = () => {
           <Route path="/booking/review" element={<BookingReview />} />
           <Route path="/payment/status" element={<PaymentStatus />} />
           <Route path="/my-bookings" element={<MyBookingsPage />} />
+          <Route path="/booking-details/:bookingId" element={<BookingDetailsPage />} />
 
           {/* New Routes */}
           <Route path="/pilgrim-retreats" element={<PilgrimRetreatsPage />} />

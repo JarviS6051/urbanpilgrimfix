@@ -1,37 +1,19 @@
 // src/utils/constants.js
 
-// Determine API URL based on environment variable first, then fallback to same-origin dev / prod hosts.
+// Simple API URL configuration for localhost development
 const getApiUrl = () => {
-  // 1) Use explicit env variable if provided (recommended)
-  if (import.meta.env && import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-
-  // 2) If running in browser, point to same host (works for localhost, 192.x, etc.)
-  if (typeof window !== 'undefined') {
-    const { protocol, hostname } = window.location;
-    // Assume backend on port 3000 if on localhost-ish, else default to same origin
-    const isLocal = hostname === 'localhost' || hostname.startsWith('192.') || hostname.startsWith('127.') || hostname.endsWith('.local');
-    if (isLocal) {
-      return `${protocol}//${hostname}:3000/api`;
-    }
-    // Production default - point to Render backend
-    return 'https://urbanpilgrimfix.onrender.com/api';
-  }
-
-  // 3) Fallback (SSR / tests)
-  return 'http://localhost:3000/api';
+  // Use localhost for development
+  // return 'http://localhost:3000/api';
+  
+  // Production API (commented out for now)
+  return 'https://urbanpilgrimfix.onrender.com/api';
 };
 
 export const BASE_URL = getApiUrl();
 
 // Debug info
 if (typeof window !== 'undefined') {
-  console.log('Current environment:', {
-    hostname: window.location.hostname,
-    apiUrl: BASE_URL,
-    isProduction: window.location.hostname !== 'localhost'
-  });
+  console.log('API URL:', BASE_URL);
 }
 
 export const PRICE_RANGES = [
