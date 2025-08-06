@@ -258,7 +258,6 @@ const Header = () => {
                   <div>
                     <div 
                       onClick={() => {
-                        console.log('Profile clicked');
                         setShowUserDropdown(false);
                         window.location.href = '/profile';
                       }}
@@ -276,7 +275,6 @@ const Header = () => {
                     </div>
                     <div 
                       onClick={() => {
-                        console.log('My Bookings clicked');
                         setShowUserDropdown(false);
                         window.location.href = '/my-bookings';
                       }}
@@ -294,7 +292,6 @@ const Header = () => {
                     </div>
                     <div 
                       onClick={() => {
-                        console.log('Logout clicked');
                         setShowUserDropdown(false);
                         handleLogout();
                       }}
@@ -314,7 +311,6 @@ const Header = () => {
                   <div>
                     <div 
                       onClick={() => {
-                        console.log('Login clicked');
                         setShowUserDropdown(false);
                         window.location.href = '/login';
                       }}
@@ -332,7 +328,6 @@ const Header = () => {
                     </div>
                     <div 
                       onClick={() => {
-                        console.log('Sign Up clicked');
                         setShowUserDropdown(false);
                         window.location.href = '/signup';
                       }}
