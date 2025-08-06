@@ -333,6 +333,20 @@ const Header = () => {
                     >
                       Profile
                     </Link>
+                    <Link 
+                      to="/my-bookings" 
+                      style={{ 
+                        display: 'block', 
+                        padding: '0.6rem 1.2rem', 
+                        color: '#222', 
+                        fontSize: 15, 
+                        textDecoration: 'none', 
+                        whiteSpace: 'nowrap' 
+                      }} 
+                      onClick={() => setShowUserDropdown(false)}
+                    >
+                      My Bookings
+                    </Link>
                     <button
                       onClick={handleLogout}
                       style={{ 

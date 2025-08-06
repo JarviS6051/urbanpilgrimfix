@@ -5,31 +5,25 @@ import FadeInSection from '../../home/components/FadeInSection';
 
 const PilgrimRetreatsPage = () => {
   return (
-    <div>
+    <div className="bg-gray-50">
       {/* Hero Section */}
-      <div style={{
-        width: '100%',
-        height: '600px',
-        overflow: 'hidden',
-        position: 'relative',
-        background: '#f8f8f8',
-        marginBottom: '2rem',
-      }}>
+      <div className="w-full overflow-hidden relative mb-8">
         <img
           src="/3.webp"
           alt="Pilgrim Retreats Hero"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-          }}
+          className="w-full h-[55vh] sm:h-[65vh] md:h-[600px] object-cover block"
         />
       </div>
-      <FadeInSection><RetreatsShortFormat /></FadeInSection>
-      <FadeInSection delay={100}><RetreatsGrid /></FadeInSection>
+
+      {/* Content Sections */}
+      <FadeInSection>
+        <RetreatsShortFormat />
+      </FadeInSection>
+
+      {/* Grid shown immediately to avoid opacity issues on mobile */}
+      <RetreatsGrid />
     </div>
   );
 };
 
-export default PilgrimRetreatsPage; 
+export default PilgrimRetreatsPage;
